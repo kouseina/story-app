@@ -2,20 +2,30 @@ package com.kouseina.storyapp.view.register
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
+import com.kouseina.storyapp.data.remote.response.ErrorResponse
+import com.kouseina.storyapp.data.remote.response.RegisterResponse
+import com.kouseina.storyapp.data.remote.retrofit.ApiConfig
 import com.kouseina.storyapp.databinding.ActivityRegisterBinding
+import com.kouseina.storyapp.view.welcome.WelcomeActivity
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,16 +60,29 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.signupButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
+            showLoading(true)
 
-            AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Akun dengan $email sudah jadi nih. Yuk, login dan belajar coding.")
-                setPositiveButton("Lanjut") { _, _ ->
+            val email = binding.emailEditText.text.toString()
+            val name = binding.nameEditText.text.toString()
+            val password = binding.passwordEditText.text.toString()
+
+            lifecycleScope.launch {
+                try {
+                    val apiService = ApiConfig.getApiService()
+                    val successResponse = apiService.register(name, email, password)
+                    showLoading(false)
+
+                    showToast(successResponse.message ?: "")
+                    startActivity(Intent(applicationContext, WelcomeActivity::class.java))
                     finish()
+
+                } catch (e: HttpException) {
+                    val errorBody = e.response()?.errorBody()?.string()
+                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+                    showLoading(false)
+
+                    showToast(errorResponse.message ?: "")
                 }
-                create()
-                show()
             }
         }
     }
@@ -93,5 +116,13 @@ class RegisterActivity : AppCompatActivity() {
             playSequentially(titleTextView, name, email, password, signupButton)
             start()
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

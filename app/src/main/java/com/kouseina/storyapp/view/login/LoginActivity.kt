@@ -3,20 +3,25 @@ package com.kouseina.storyapp.view.login
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doOnTextChanged
-import com.kouseina.storyapp.R
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
 import com.kouseina.storyapp.data.pref.UserModel
+import com.kouseina.storyapp.data.remote.response.ErrorResponse
+import com.kouseina.storyapp.data.remote.response.LoginResponse
+import com.kouseina.storyapp.data.remote.response.LoginResult
+import com.kouseina.storyapp.data.remote.retrofit.ApiConfig
 import com.kouseina.storyapp.databinding.ActivityLoginBinding
 import com.kouseina.storyapp.view.ViewModelFactory
 import com.kouseina.storyapp.view.main.MainActivity
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
@@ -56,21 +61,41 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.loginButton.setOnClickListener {
+            showLoading(true)
+
             val email = binding.emailEditText.text.toString()
-            viewModel.saveSession(UserModel(email, "sample_token"))
-            AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Anda berhasil login. Sudah tidak sabar untuk belajar ya?")
-                setPositiveButton("Lanjut") { _, _ ->
-                    val intent = Intent(context, MainActivity::class.java)
+            val password = binding.passwordEditText.text.toString()
+
+            lifecycleScope.launch {
+                try {
+                    val apiService = ApiConfig.getApiService()
+                    val successResponse = apiService.login(email, password)
+                    showLoading(false)
+
+                    showToast(successResponse.message ?: "")
+                    viewModel.saveSession(UserModel(email, successResponse.loginResult?.token ?: "", true))
+
+                    val intent = Intent(applicationContext, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
                     finish()
+
+                } catch (e: HttpException) {
+                    val errorBody = e.response()?.errorBody()?.string()
+                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+                    showLoading(false)
+
+                    showToast(errorResponse.message ?: "")
                 }
-                create()
-                show()
             }
         }
     }
 
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 }
