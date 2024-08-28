@@ -4,11 +4,13 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import com.kouseina.storyapp.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {
@@ -36,6 +38,14 @@ class RegisterActivity : AppCompatActivity() {
             )
         }
         supportActionBar?.hide()
+
+        binding.passwordEditText.doOnTextChanged { text, start, before, count ->
+            if (text.toString().length < 8) {
+                binding.passwordEditText.setError("Password tidak boleh kurang dari 8 karakter", null)
+            } else {
+                binding.passwordEditText.setError(null)
+            }
+        }
     }
 
     private fun setupAction() {

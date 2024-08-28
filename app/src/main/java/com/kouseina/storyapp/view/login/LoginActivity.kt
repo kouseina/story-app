@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doOnTextChanged
 import com.kouseina.storyapp.R
 import com.kouseina.storyapp.data.pref.UserModel
 import com.kouseina.storyapp.databinding.ActivityLoginBinding
@@ -43,6 +44,14 @@ class LoginActivity : AppCompatActivity() {
             )
         }
         supportActionBar?.hide()
+
+        binding.passwordEditText.doOnTextChanged { text, start, before, count ->
+            if (text.toString().length < 8) {
+                binding.passwordEditText.setError("Password tidak boleh kurang dari 8 karakter", null)
+            } else {
+                binding.passwordEditText.setError(null)
+            }
+        }
     }
 
     private fun setupAction() {

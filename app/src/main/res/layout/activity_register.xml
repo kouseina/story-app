@@ -132,7 +132,8 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordTextView"
         app:startIconDrawable="@drawable/ic_baseline_lock_24"
         android:alpha="0"
-        tools:alpha="100" >
+        tools:alpha="100"
+        app:errorEnabled="true" >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordEditText"
