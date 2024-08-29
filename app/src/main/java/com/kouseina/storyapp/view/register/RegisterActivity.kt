@@ -68,7 +68,7 @@ class RegisterActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try {
-                    val apiService = ApiConfig.getApiService()
+                    val apiService = ApiConfig.getApiService(null)
                     val successResponse = apiService.register(name, email, password)
                     showLoading(false)
 

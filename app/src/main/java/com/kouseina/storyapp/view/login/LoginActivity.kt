@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try {
-                    val apiService = ApiConfig.getApiService()
+                    val apiService = ApiConfig.getApiService(null)
                     val successResponse = apiService.login(email, password)
                     showLoading(false)
 

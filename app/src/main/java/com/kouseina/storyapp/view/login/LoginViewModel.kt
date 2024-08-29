@@ -6,10 +6,10 @@ import com.kouseina.storyapp.data.UserRepository
 import com.kouseina.storyapp.data.pref.UserModel
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val repository: UserRepository) : ViewModel() {
+class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     fun saveSession(user: UserModel) {
         viewModelScope.launch {
-            repository.saveSession(user)
+            userRepository.saveSession(user)
         }
     }
 }
