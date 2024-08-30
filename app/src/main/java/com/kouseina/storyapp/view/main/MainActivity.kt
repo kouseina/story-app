@@ -3,17 +3,22 @@ package com.kouseina.storyapp.view.main
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.kouseina.storyapp.R
+import com.kouseina.storyapp.data.remote.response.ListStoryItem
 import com.kouseina.storyapp.databinding.ActivityMainBinding
 import com.kouseina.storyapp.view.ViewModelFactory
 import com.kouseina.storyapp.view.welcome.WelcomeActivity
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
@@ -34,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupView()
-        setupAction()
     }
 
     private fun setupView() {
@@ -48,11 +52,36 @@ class MainActivity : AppCompatActivity() {
             )
         }
         supportActionBar?.hide()
+
+        val layoutManager = LinearLayoutManager(applicationContext)
+        binding.rvStory.layoutManager = layoutManager
+        val itemDecoration = DividerItemDecoration(applicationContext, layoutManager.orientation)
+        binding.rvStory.addItemDecoration(itemDecoration)
+
+        lifecycleScope.launch {
+            viewModel.fetchStoryList()
+        }
+
+        viewModel.isLoading.observe(this) {
+            showLoading(it)
+        }
+
+        viewModel.storyList.observe(this) {
+            setStoryListData(it)
+        }
     }
 
-    private fun setupAction() {
-        binding.logoutButton.setOnClickListener {
-            viewModel.logout()
+    private fun setStoryListData(storyList: List<ListStoryItem>) {
+        val adapter = MainAdapter()
+        adapter.submitList(storyList)
+        binding.rvStory.adapter = adapter
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressIndicator.visibility = View.VISIBLE
+        } else {
+            binding.progressIndicator.visibility = View.GONE
         }
     }
 
