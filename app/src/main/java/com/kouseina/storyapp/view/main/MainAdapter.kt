@@ -1,5 +1,6 @@
 package com.kouseina.storyapp.view.main
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,6 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.kouseina.storyapp.data.remote.response.ListStoryItem
 import com.kouseina.storyapp.databinding.ItemStoryBinding
+import android.content.Intent
+import androidx.core.app.ActivityOptionsCompat
+import com.kouseina.storyapp.view.detail.DetailActivity
+import androidx.core.util.Pair
 
 class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CALLBACK) {
     companion object {
@@ -30,6 +35,18 @@ class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CA
                 .load(story.photoUrl)
                 .into(binding.imageView)
             binding.tvDesc.text = story.description
+            binding.linearLayout.setOnClickListener {
+                val intent = Intent(it.context, DetailActivity::class.java)
+                intent.putExtra(DetailActivity.STORY_ITEM, story)
+                val optionsCompat: ActivityOptionsCompat =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        itemView.context as Activity,
+                        Pair(binding.imageView, "image"),
+                        Pair(binding.tvName, "name"),
+                        Pair(binding.tvDesc, "description"),
+                    )
+                itemView.context.startActivity(intent, optionsCompat.toBundle())
+            }
         }
     }
 
