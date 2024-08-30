@@ -20,6 +20,12 @@ class MainViewModel(
         return repository.getSession().asLiveData()
     }
 
+    fun logout() {
+        viewModelScope.launch {
+            repository.logout()
+        }
+    }
+
     private val _storyList = MutableLiveData<List<ListStoryItem>>()
     val storyList: LiveData<List<ListStoryItem>> = _storyList
 

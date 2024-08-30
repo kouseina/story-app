@@ -1,13 +1,10 @@
 package com.kouseina.storyapp.view.main
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +16,7 @@ import com.kouseina.storyapp.databinding.ActivityMainBinding
 import com.kouseina.storyapp.view.ViewModelFactory
 import com.kouseina.storyapp.view.welcome.WelcomeActivity
 import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
@@ -41,17 +39,25 @@ class MainActivity : AppCompatActivity() {
         setupView()
     }
 
-    private fun setupView() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_logout -> {
+                viewModel.logout()
+                return true
+            }
+
+            else -> return super.onOptionsItemSelected(item)
         }
-        supportActionBar?.hide()
+    }
+
+    private fun setupView() {
+        setToolBar()
 
         val layoutManager = LinearLayoutManager(applicationContext)
         binding.rvStory.layoutManager = layoutManager
@@ -69,6 +75,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.storyList.observe(this) {
             setStoryListData(it)
         }
+    }
+
+    private fun setToolBar() {
+        binding.toolbar.title = "Dicoding Story"
+
+        setSupportActionBar(binding.toolbar)
     }
 
     private fun setStoryListData(storyList: List<ListStoryItem>) {
