@@ -2,6 +2,7 @@ package com.kouseina.storyapp.view.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -88,6 +89,14 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.storyList.observe(this) {
             setStoryListData(it)
+
+            if (it.isEmpty()) {
+                binding.tvEmpty.visibility = View.VISIBLE
+                binding.rvStory.visibility = View.GONE
+            } else {
+                binding.tvEmpty.visibility = View.GONE
+                binding.rvStory.visibility = View.VISIBLE
+            }
         }
     }
 
