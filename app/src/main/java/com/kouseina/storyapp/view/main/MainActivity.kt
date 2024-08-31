@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
             if (!user.isLogin) {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
+            } else {
+                viewModel.fetchStoryList()
             }
         }
 
@@ -80,8 +82,6 @@ class MainActivity : AppCompatActivity() {
         binding.rvStory.layoutManager = layoutManager
         val itemDecoration = DividerItemDecoration(applicationContext, layoutManager.orientation)
         binding.rvStory.addItemDecoration(itemDecoration)
-
-        viewModel.fetchStoryList()
 
         viewModel.isLoading.observe(this) {
             showLoading(it)
