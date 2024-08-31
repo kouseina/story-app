@@ -8,31 +8,22 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
 import com.kouseina.storyapp.R
-import com.kouseina.storyapp.data.remote.retrofit.ApiConfig
 import com.kouseina.storyapp.databinding.ActivityAddStoryBinding
 import com.kouseina.storyapp.utils.getImageUri
 import com.kouseina.storyapp.utils.reduceFileImage
 import com.kouseina.storyapp.utils.uriToFile
 import com.kouseina.storyapp.view.ViewModelFactory
-import com.kouseina.storyapp.view.login.LoginViewModel
 import com.kouseina.storyapp.view.main.MainActivity
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
 
 class AddStoryActivity : AppCompatActivity() {
     companion object {

@@ -14,8 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.kouseina.storyapp.data.pref.UserModel
 import com.kouseina.storyapp.data.remote.response.ErrorResponse
-import com.kouseina.storyapp.data.remote.response.LoginResponse
-import com.kouseina.storyapp.data.remote.response.LoginResult
 import com.kouseina.storyapp.data.remote.retrofit.ApiConfig
 import com.kouseina.storyapp.databinding.ActivityLoginBinding
 import com.kouseina.storyapp.view.ViewModelFactory
@@ -70,15 +68,15 @@ class LoginActivity : AppCompatActivity() {
                 try {
                     val apiService = ApiConfig.getApiService("")
                     val successResponse = apiService.login(email, password)
-                    showLoading(false)
+
+                    viewModel.saveSession(UserModel(email, successResponse.loginResult?.token ?: "", true))
 
                     showToast(successResponse.message ?: "")
-                    viewModel.saveSession(UserModel(email, successResponse.loginResult?.token ?: "", true))
+                    showLoading(false)
 
                     val intent = Intent(applicationContext, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
-                    finish()
 
                 } catch (e: HttpException) {
                     val errorBody = e.response()?.errorBody()?.string()

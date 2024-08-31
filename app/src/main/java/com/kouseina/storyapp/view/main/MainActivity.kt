@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kouseina.storyapp.R
@@ -17,7 +16,6 @@ import com.kouseina.storyapp.databinding.ActivityMainBinding
 import com.kouseina.storyapp.view.ViewModelFactory
 import com.kouseina.storyapp.view.add_story.AddStoryActivity
 import com.kouseina.storyapp.view.welcome.WelcomeActivity
-import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,8 +33,6 @@ class MainActivity : AppCompatActivity() {
             if (!user.isLogin) {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
-            } else {
-                viewModel.fetchStoryList()
             }
         }
 
@@ -82,6 +78,15 @@ class MainActivity : AppCompatActivity() {
         binding.rvStory.layoutManager = layoutManager
         val itemDecoration = DividerItemDecoration(applicationContext, layoutManager.orientation)
         binding.rvStory.addItemDecoration(itemDecoration)
+
+        viewModel.getSession().observe(this) { user ->
+            Log.d("MainActivity isLogin: ", user.isLogin.toString())
+            Log.d("MainActivity TOKEN: ", user.token)
+
+            if (user.isLogin) {
+                viewModel.fetchStoryList()
+            }
+        }
 
         viewModel.isLoading.observe(this) {
             showLoading(it)

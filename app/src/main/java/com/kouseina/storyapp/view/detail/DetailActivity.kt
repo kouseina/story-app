@@ -1,16 +1,11 @@
 package com.kouseina.storyapp.view.detail
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.kouseina.storyapp.data.remote.response.ListStoryItem
 import com.kouseina.storyapp.databinding.ActivityDetailBinding
-import com.kouseina.storyapp.databinding.ActivityMainBinding
-
 class DetailActivity : AppCompatActivity() {
     companion object {
         const val STORY_ITEM = "story_item"

@@ -8,11 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.kouseina.storyapp.R
 import com.kouseina.storyapp.databinding.ActivityWelcomeBinding
 import com.kouseina.storyapp.view.login.LoginActivity
 import com.kouseina.storyapp.view.register.RegisterActivity
