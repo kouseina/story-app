@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kouseina.storyapp.data.StoryRepository
 import com.kouseina.storyapp.di.Injection
+import com.kouseina.storyapp.view.add_story.AddStoryViewModel
 import com.kouseina.storyapp.view.login.LoginViewModel
 import com.kouseina.storyapp.view.main.MainViewModel
 
@@ -21,6 +22,10 @@ class ViewModelFactory(
 
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(repository) as T
+            }
+
+            modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
+                AddStoryViewModel(repository) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

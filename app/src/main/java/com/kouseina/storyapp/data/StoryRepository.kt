@@ -2,9 +2,12 @@ package com.kouseina.storyapp.data
 
 import com.kouseina.storyapp.data.pref.UserModel
 import com.kouseina.storyapp.data.pref.UserPreference
+import com.kouseina.storyapp.data.remote.response.AddStoryResponse
 import com.kouseina.storyapp.data.remote.response.StoryResponse
 import com.kouseina.storyapp.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class StoryRepository private constructor(
     private val userPreference: UserPreference,
@@ -25,6 +28,13 @@ class StoryRepository private constructor(
 
     suspend fun getStory(): StoryResponse {
         return apiService.getStories()
+    }
+
+    suspend fun addStory(
+        multipartBody: MultipartBody.Part,
+        requestBody: RequestBody
+    ): AddStoryResponse {
+        return apiService.addStory(multipartBody, requestBody)
     }
 
     companion object {

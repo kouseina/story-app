@@ -14,6 +14,7 @@ import com.kouseina.storyapp.R
 import com.kouseina.storyapp.data.remote.response.ListStoryItem
 import com.kouseina.storyapp.databinding.ActivityMainBinding
 import com.kouseina.storyapp.view.ViewModelFactory
+import com.kouseina.storyapp.view.add_story.AddStoryActivity
 import com.kouseina.storyapp.view.welcome.WelcomeActivity
 import kotlinx.coroutines.launch
 
@@ -39,6 +40,11 @@ class MainActivity : AppCompatActivity() {
         setupView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchStoryList()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
@@ -58,15 +64,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupView() {
         setToolBar()
+        setRecylerView()
+        setFab()
+    }
 
+    private fun setToolBar() {
+        binding.toolbar.title = "Dicoding Story"
+
+        setSupportActionBar(binding.toolbar)
+    }
+
+    private fun setRecylerView() {
         val layoutManager = LinearLayoutManager(applicationContext)
         binding.rvStory.layoutManager = layoutManager
         val itemDecoration = DividerItemDecoration(applicationContext, layoutManager.orientation)
         binding.rvStory.addItemDecoration(itemDecoration)
 
-        lifecycleScope.launch {
-            viewModel.fetchStoryList()
-        }
+        viewModel.fetchStoryList()
 
         viewModel.isLoading.observe(this) {
             showLoading(it)
@@ -77,10 +91,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setToolBar() {
-        binding.toolbar.title = "Dicoding Story"
-
-        setSupportActionBar(binding.toolbar)
+    private fun setFab() {
+        binding.fab.setOnClickListener {
+            startActivity(Intent(this, AddStoryActivity::class.java))
+        }
     }
 
     private fun setStoryListData(storyList: List<ListStoryItem>) {
