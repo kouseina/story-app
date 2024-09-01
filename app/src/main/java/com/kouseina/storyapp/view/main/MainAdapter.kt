@@ -34,6 +34,7 @@ class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CA
             Glide.with(itemView.context)
                 .load(story.photoUrl)
                 .into(binding.imageView)
+
             binding.tvDesc.text = story.description
             binding.linearLayout.setOnClickListener {
                 val intent = Intent(it.context, DetailActivity::class.java)

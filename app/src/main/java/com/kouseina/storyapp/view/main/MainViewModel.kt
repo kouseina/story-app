@@ -1,5 +1,6 @@
 package com.kouseina.storyapp.view.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,6 +52,8 @@ class MainViewModel(
                 val jsonInString = e.response()?.errorBody()?.string()
                 val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
                 val errorMessage = errorBody.message
+
+                Log.d("MainViewModel", errorMessage ?: "")
             }
         }
     }
