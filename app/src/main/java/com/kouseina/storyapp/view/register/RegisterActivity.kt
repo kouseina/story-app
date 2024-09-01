@@ -10,7 +10,6 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.kouseina.storyapp.data.remote.response.ErrorResponse
@@ -44,14 +43,6 @@ class RegisterActivity : AppCompatActivity() {
             )
         }
         supportActionBar?.hide()
-
-        binding.passwordEditText.doOnTextChanged { text, start, before, count ->
-            if (text.toString().length < 8) {
-                binding.passwordEditText.setError("Password tidak boleh kurang dari 8 karakter", null)
-            } else {
-                binding.passwordEditText.setError(null)
-            }
-        }
     }
 
     private fun setupAction() {

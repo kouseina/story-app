@@ -135,7 +135,7 @@
         tools:alpha="100"
         app:errorEnabled="true" >
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.kouseina.storyapp.view.MyEditPassword
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
