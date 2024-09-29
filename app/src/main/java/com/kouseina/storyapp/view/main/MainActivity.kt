@@ -5,14 +5,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kouseina.storyapp.R
 import com.kouseina.storyapp.data.remote.response.ListStoryItem
 import com.kouseina.storyapp.databinding.ActivityMainBinding
+import com.kouseina.storyapp.view.LoadingStateAdapter
 import com.kouseina.storyapp.view.ViewModelFactory
 import com.kouseina.storyapp.view.add_story.AddStoryActivity
 import com.kouseina.storyapp.view.map.MapsActivity
@@ -38,11 +39,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupView()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.fetchStoryList()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -89,25 +85,10 @@ class MainActivity : AppCompatActivity() {
             Log.d("MainActivity isLogin: ", user.isLogin.toString())
             Log.d("MainActivity TOKEN: ", user.token)
 
-            if (user.isLogin) {
-                viewModel.fetchStoryList()
-            }
-        }
-
-        viewModel.isLoading.observe(this) {
-            showLoading(it)
         }
 
         viewModel.storyList.observe(this) {
             setStoryListData(it)
-
-            if (it.isEmpty()) {
-                binding.tvEmpty.visibility = View.VISIBLE
-                binding.rvStory.visibility = View.GONE
-            } else {
-                binding.tvEmpty.visibility = View.GONE
-                binding.rvStory.visibility = View.VISIBLE
-            }
         }
     }
 
@@ -117,18 +98,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setStoryListData(storyList: List<ListStoryItem>) {
+    private fun setStoryListData(data: PagingData<ListStoryItem>) {
         val adapter = MainAdapter()
-        adapter.submitList(storyList)
-        binding.rvStory.adapter = adapter
-    }
+        binding.rvStory.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
 
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressIndicator.visibility = View.VISIBLE
-        } else {
-            binding.progressIndicator.visibility = View.GONE
-        }
+        adapter.submitData(lifecycle, data)
     }
-
 }

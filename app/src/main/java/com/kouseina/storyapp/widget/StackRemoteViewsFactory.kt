@@ -35,7 +35,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context) : RemoteVi
     override fun onDataSetChanged() {
         runBlocking {
             try {
-                val response = provideRepository(mContext).getStory()
+                val response = provideRepository(mContext).getStoryForStackWidget()
                 mWidgetItems.addAll(response.listStory?.map { it.photoUrl ?:  "" } ?: ArrayList())
             } catch (e: HttpException) {
                 //get error message

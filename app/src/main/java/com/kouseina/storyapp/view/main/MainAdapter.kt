@@ -13,8 +13,9 @@ import android.content.Intent
 import androidx.core.app.ActivityOptionsCompat
 import com.kouseina.storyapp.view.detail.DetailActivity
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
 
-class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class MainAdapter : PagingDataAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CALLBACK) {
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
             override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
@@ -58,6 +59,6 @@ class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CA
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val user = getItem(position)
-        holder.bind(user)
+        user?.let { holder.bind(it) }
     }
 }

@@ -36,8 +36,7 @@
 
         <activity
             android:name=".view.map.MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
+            android:exported="false"/>
 
         <receiver
             android:name=".widget.StoryBannerWidget"
