@@ -30,6 +30,10 @@ class StoryRepository private constructor(
         return apiService.getStories()
     }
 
+    suspend fun getStoryWithLocation(): StoryResponse {
+        return apiService.getStoriesWithLocation()
+    }
+
     suspend fun addStory(
         multipartBody: MultipartBody.Part,
         requestBody: RequestBody

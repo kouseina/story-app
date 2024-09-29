@@ -26,7 +26,7 @@ class MapsViewModel(
 
         viewModelScope.launch {
             try {
-                val response = repository.getStory()
+                val response = repository.getStoryWithLocation()
                 _isLoading.value = false
 
                 if (response.listStory != null) {

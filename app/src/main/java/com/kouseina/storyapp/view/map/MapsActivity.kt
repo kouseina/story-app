@@ -72,6 +72,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun generateMarker(list: List<ListStoryItem>) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-6.200000, 106.816666), 10f))
+
         list.forEachIndexed {index, data ->
             val latLng = data.lat?.let { data.lon?.let { it1 -> LatLng(it, it1) } }
             latLng?.let {
@@ -83,8 +85,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.addMarker(
                     it
                 )
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
             }
         }
     }
