@@ -8,6 +8,7 @@ import com.kouseina.storyapp.di.Injection
 import com.kouseina.storyapp.view.add_story.AddStoryViewModel
 import com.kouseina.storyapp.view.login.LoginViewModel
 import com.kouseina.storyapp.view.main.MainViewModel
+import com.kouseina.storyapp.view.map.MapsViewModel
 
 class ViewModelFactory(
     private val repository: StoryRepository,
@@ -26,6 +27,10 @@ class ViewModelFactory(
 
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
                 AddStoryViewModel(repository) as T
+            }
+
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(repository) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

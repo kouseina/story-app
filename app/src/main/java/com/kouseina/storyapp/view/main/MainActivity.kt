@@ -15,6 +15,7 @@ import com.kouseina.storyapp.data.remote.response.ListStoryItem
 import com.kouseina.storyapp.databinding.ActivityMainBinding
 import com.kouseina.storyapp.view.ViewModelFactory
 import com.kouseina.storyapp.view.add_story.AddStoryActivity
+import com.kouseina.storyapp.view.map.MapsActivity
 import com.kouseina.storyapp.view.welcome.WelcomeActivity
 
 
@@ -54,6 +55,11 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_logout -> {
                 viewModel.logout()
+                return true
+            }
+
+            R.id.menu_map -> {
+                startActivity(Intent(this, MapsActivity::class.java))
                 return true
             }
 
