@@ -1,5 +1,7 @@
 package com.kouseina.storyapp.view.add_story
 
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,7 +26,9 @@ class AddStoryViewModel(private val repository: StoryRepository) : ViewModel() {
 
     fun addStory(
         multipartBody: MultipartBody.Part,
-        requestBody: RequestBody
+        description: RequestBody,
+        lat: Float?,
+        lon: Float?,
     ) {
         _message.value = null
         _isLoading.value = true
@@ -32,7 +36,7 @@ class AddStoryViewModel(private val repository: StoryRepository) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val successResponse = repository.addStory(multipartBody, requestBody)
+                val successResponse = repository.addStory(multipartBody, description, lat, lon)
                 _message.value = successResponse.message
                 _isLoading.value = false
                 _addStorySuccess.value = true
